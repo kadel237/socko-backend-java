@@ -2,11 +2,14 @@ package com.soko_backend.entity;
 
 import com.soko_backend.enums.Role;
 import jakarta.persistence.*;
+import lombok.Builder;
+import lombok.Data;
 
 import java.time.LocalDateTime;
 
-
+@Builder
 @Entity
+@Data
 @Table(name = "users")
 public class User {
     @Id
