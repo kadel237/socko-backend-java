@@ -1,9 +1,10 @@
 package com.soko_backend.dto;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
-@Data
-public class LoginRequest {
-    private String email;
-    private String password;
+
+public record LoginRequest (
+    @NotBlank(message = "Login is mandatory")String email,
+    @NotBlank(message = "password is mandatory") String password){
 }
