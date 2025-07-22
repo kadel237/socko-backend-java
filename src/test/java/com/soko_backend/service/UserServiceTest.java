@@ -12,8 +12,9 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -33,45 +34,52 @@ public class UserServiceTest {
         MockitoAnnotations.openMocks(this);
     }
     @Test
- void shouldSavedUser(){
-        //Given
+    void shouldSaveUser() {
         RegisterRequest request = new RegisterRequest();
-        request.setName("Elisabeth");
-        request.setSurname("Ngue");
         request.setEmail("elisabeth@example.com");
-        request.setPassword("password123");
-
-        String encodedPassword = "encodedPassword123";
-        when(passwordEncoder.encode("password123")).thenReturn(encodedPassword);
+        request.setName("Elisabeth");
+        request.setSurname("Georgia");
+        request.setPassword("securePassword");
 
         UserEntity savedUser = new UserEntity();
-        savedUser.setId(1L);
-        savedUser.setName("Elisabeth");
-        savedUser.setSurname("Ngue");
-        savedUser.setEmail("elisabeth@example.com");
-        savedUser.setPassword(encodedPassword);
+        savedUser.setEmail(request.getEmail());
+        savedUser.setName(request.getName());
+        savedUser.setSurname(request.getSurname());
+        savedUser.setPassword("encodedPassword");
         savedUser.setRole(Role.CUSTOMER);
-        savedUser.setLogin("elisabeth@example.com");
+        savedUser.setLogin(request.getEmail());
 
+        when(passwordEncoder.encode(request.getPassword())).thenReturn("encodedPassword");
         when(userRepository.save(any(UserEntity.class))).thenReturn(savedUser);
 
-        // when
         UserEntity result = userService.register(request);
 
-        // then
-        ArgumentCaptor<UserEntity> userCaptor = ArgumentCaptor.forClass(UserEntity.class);
-        verify(userRepository, times(1)).save(userCaptor.capture());
+        assertEquals("elisabeth@example.com", result.getEmail());
+        assertEquals("Elisabeth", result.getName());
+        assertEquals("Georgia", result.getSurname());
+        assertEquals("encodedPassword", result.getPassword());
+        assertEquals(Role.CUSTOMER, result.getRole());
+    }
+    @Test
+    public void shouldRetournUserMail(){
 
-        UserEntity capturedUser = userCaptor.getValue();
-        assertEquals("Elisabeth", capturedUser.getName());
-        assertEquals("Ngue", capturedUser.getSurname());
-        assertEquals("elisabeth@example.com", capturedUser.getEmail());
-        assertEquals(encodedPassword, capturedUser.getPassword());
-        assertEquals(Role.CUSTOMER, capturedUser.getRole());
-        assertEquals("elisabeth@example.com", capturedUser.getLogin());
+        // Given
+        String email = "test@example.com";
+        UserEntity expectedUser = new UserEntity();
+        expectedUser.setEmail(email);
+        expectedUser.setName("Test");
+        expectedUser.setRole(Role.CUSTOMER);
 
-        assertNotNull(result);
-        assertEquals(1L, result.getId());
+        when(userRepository.findByEmail(email)).thenReturn(Optional.of(expectedUser));
+
+        // When
+        Optional<UserEntity> actual = Optional.ofNullable(userService.findByEmail(email));
+
+        // Then
+        assertTrue(actual.isPresent());
+        assertEquals(expectedUser.getEmail(), actual.get().getEmail());
+        verify(userRepository, times(1)).findByEmail(email);
+
     }
 
 

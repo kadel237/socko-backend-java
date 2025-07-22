@@ -33,6 +33,9 @@ public class UserEntity implements UserDetails {
     private String surname;
     private String username;
 
+    @Column(nullable = false)
+    private boolean verified = false;
+
     @Column(unique = true, nullable = false)
     private String email;
 

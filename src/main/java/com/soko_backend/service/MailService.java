@@ -1,5 +1,6 @@
 package com.soko_backend.service;
 
 public interface MailService {
-    void sendResetCode(String to, String code);
+    void sendVerificationEmail(String to, String verificationLink);
+    void sendPasswordResetEmail(String to, String resetLink);
 }
