@@ -30,20 +30,23 @@ public class JwtService {
     }
 
     public String createToken(Authentication authentication) {
+        Instant now = Instant.now();
+
+        // Extraire les rôles en texte
         List<String> roles = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .toList();
 
-        Instant now = Instant.now();
-
+        // Construire les claims avec la bonne clé "roles"
         JwtClaimsSet claims = JwtClaimsSet.builder()
                 .subject(authentication.getName())
                 .issuedAt(now)
                 .expiresAt(now.plus(tokenValidityInSeconds, ChronoUnit.SECONDS))
-                .claim(SecurityUtils.AUTHORITIES_CLAIM_KEY, roles)
+                .claim("roles", roles)
                 .build();
 
         JwsHeader jwsHeader = JwsHeader.with(SecurityUtils.JWT_ALGORITHM).build();
+        System.out.println("Authorities: " + authentication.getAuthorities());
         return jwtEncoder.encode(JwtEncoderParameters.from(jwsHeader, claims)).getTokenValue();
     }
 }

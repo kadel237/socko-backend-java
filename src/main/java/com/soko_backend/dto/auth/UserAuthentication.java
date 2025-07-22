@@ -1,4 +1,4 @@
-package com.soko_backend.dto;
+package com.soko_backend.dto.auth;
 
 public record UserAuthentication(
         String login,

@@ -1,14 +1,12 @@
 package com.soko_backend.service;
 
-import com.soko_backend.dto.RegisterRequest;
+import com.soko_backend.dto.auth.RegisterRequest;
 import com.soko_backend.entity.UserEntity;
 import com.soko_backend.enums.Role;
 import com.soko_backend.exception.EmailAlreadyUsedException;
 import com.soko_backend.exception.UserNotfoundException;
 import com.soko_backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -42,7 +40,7 @@ public class UserService {
         return userRepository.save(user);
     }
     public UserEntity findByEmail(String email) {
-        return userRepository.findByEmail(email)
+        return userRepository.findByEmailIgnoreCase(email)
                 .orElseThrow(() -> new UserNotfoundException("Utilisateur introuvable avec l'email : " + email));
     }
 }

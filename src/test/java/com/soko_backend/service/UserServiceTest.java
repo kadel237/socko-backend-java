@@ -1,12 +1,11 @@
 package com.soko_backend.service;
 
-import com.soko_backend.dto.RegisterRequest;
+import com.soko_backend.dto.auth.RegisterRequest;
 import com.soko_backend.entity.UserEntity;
 import com.soko_backend.enums.Role;
 import com.soko_backend.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -70,7 +69,7 @@ public class UserServiceTest {
         expectedUser.setName("Test");
         expectedUser.setRole(Role.CUSTOMER);
 
-        when(userRepository.findByEmail(email)).thenReturn(Optional.of(expectedUser));
+        when(userRepository.findByEmailIgnoreCase(email)).thenReturn(Optional.of(expectedUser));
 
         // When
         Optional<UserEntity> actual = Optional.ofNullable(userService.findByEmail(email));
@@ -78,7 +77,7 @@ public class UserServiceTest {
         // Then
         assertTrue(actual.isPresent());
         assertEquals(expectedUser.getEmail(), actual.get().getEmail());
-        verify(userRepository, times(1)).findByEmail(email);
+        verify(userRepository, times(1)).findByEmailIgnoreCase(email);
 
     }
 

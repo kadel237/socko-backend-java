@@ -1,4 +1,4 @@
-package com.soko_backend.dto;
+package com.soko_backend.dto.auth;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
