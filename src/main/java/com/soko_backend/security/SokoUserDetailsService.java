@@ -21,19 +21,17 @@ public class SokoUserDetailsService implements UserDetailsService {
     private UserRepository userRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
-        return userRepository.findOneWithRolesByLoginIgnoreCase(login)
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        return userRepository.findByEmailIgnoreCase(email)
                 .map(this::createSecurityUser)
-                .orElseThrow(() -> new UsernameNotFoundException("User with login " + login + " could not be found."));
+                .orElseThrow(() -> new UsernameNotFoundException("User with email " + email + " could not be found."));
     }
 
     private User createSecurityUser(UserEntity userEntity) {
-        List<SimpleGrantedAuthority> grantedRoles = userEntity
-                .getRoles()
-                .stream()
-                .map(RoleEntity::getName)
-                .map(SimpleGrantedAuthority::new)
-                .toList();
-        return new User(userEntity.getLogin(), userEntity.getPassword(), grantedRoles);
+        List<SimpleGrantedAuthority> grantedRoles = List.of(
+            new SimpleGrantedAuthority( userEntity.getRole().name())
+        );
+        System.out.println("Rôles injectés dans UserDetails : " + grantedRoles);
+        return new User(userEntity.getEmail(), userEntity.getPassword(), grantedRoles);
     }
 }

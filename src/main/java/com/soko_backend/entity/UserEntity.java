@@ -42,6 +42,7 @@ public class UserEntity implements UserDetails {
     private String password;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "role")
     private Role role = Role.CUSTOMER;
 
     @Column(name = "created_at", updatable = false)
@@ -55,13 +56,8 @@ public class UserEntity implements UserDetails {
 
     @Column(name = "reset_token_expiry")
     private LocalDateTime resetTokenExpiry;
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "user_roles", // nom de la table de jointure
-            joinColumns = @JoinColumn(name = "user_id"),  // clé étrangère vers UserEntity
-            inverseJoinColumns = @JoinColumn(name = "role_name") // clé étrangère vers RoleEntity (name)
-    )
-    private Set<RoleEntity> roles = new HashSet<>();
+
+
 
     // Relations avec Shop, Order, Notification
 
