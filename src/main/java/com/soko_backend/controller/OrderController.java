@@ -2,6 +2,7 @@ package com.soko_backend.controller;
 
 import com.soko_backend.dto.order.CreateOrderRequest;
 import com.soko_backend.dto.order.OrderResponse;
+import com.soko_backend.dto.order.UpdateOrderStatusRequest;
 import com.soko_backend.service.order.OrderService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -49,5 +50,23 @@ public class OrderController {
     @GetMapping("/{orderId}")
     public ResponseEntity<OrderResponse> getOrderById(@PathVariable Long orderId) {
         return ResponseEntity.ok(orderService.getOrderById(orderId));
+    }
+
+    @Operation(summary = "Lister les commandes de l'utilisateur connecté")
+    @GetMapping("/my")
+    public ResponseEntity<List<OrderResponse>> getMyOrders() {
+        return ResponseEntity.ok(orderService.getOrdersForCurrentCustomer());
+    }
+
+    @Operation(summary = "Lister les commandes des produits du commerçant connecté")
+    @GetMapping("/merchant")
+    public ResponseEntity<List<OrderResponse>> getOrdersByMerchant() {
+        return ResponseEntity.ok(orderService.getOrdersForCurrentMerchant());
+    }
+
+    @Operation(summary = "Mettre à jour le statut d'une commande")
+    @PutMapping("/{orderId}/status")
+    public ResponseEntity<OrderResponse> updateOrderStatus(@PathVariable Long orderId, @RequestBody UpdateOrderStatusRequest request) {
+        return ResponseEntity.ok(orderService.updateOrderStatus(orderId, request));
     }
 }

@@ -1,4 +1,4 @@
-package com.soko_backend.repository;
+package com.soko_backend.repository.token;
 
 import com.soko_backend.entity.token.VerificationToken;
 import org.springframework.data.jpa.repository.JpaRepository;

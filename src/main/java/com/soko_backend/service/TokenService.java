@@ -4,8 +4,8 @@ import com.soko_backend.entity.token.PasswordResetToken;
 import com.soko_backend.entity.user.UserEntity;
 import com.soko_backend.entity.token.VerificationToken;
 import com.soko_backend.exception.TokenNotFoundException;
-import com.soko_backend.repository.PasswordResetTokenRepository;
-import com.soko_backend.repository.VerificationTokenRepository;
+import com.soko_backend.repository.token.PasswordResetTokenRepository;
+import com.soko_backend.repository.token.VerificationTokenRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
