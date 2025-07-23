@@ -11,6 +11,7 @@ import com.soko_backend.enums.OrderStatus;
 import com.soko_backend.repository.OrderRepository;
 import com.soko_backend.repository.ProductRepository;
 import com.soko_backend.repository.UserRepository;
+import com.soko_backend.security.CurrentUserService;
 import com.soko_backend.service.order.OrderServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,13 +30,14 @@ class OrderServiceImplTest {
     private ProductRepository productRepository;
     private UserRepository userRepository;
     private OrderServiceImpl orderService;
+    private CurrentUserService currentUserService;
 
     @BeforeEach
     void setUp() {
         orderRepository = mock(OrderRepository.class);
         productRepository = mock(ProductRepository.class);
         userRepository = mock(UserRepository.class);
-        orderService = new OrderServiceImpl(orderRepository, productRepository, userRepository);
+        orderService = new OrderServiceImpl(orderRepository, productRepository, userRepository, currentUserService);
     }
 
     @Test

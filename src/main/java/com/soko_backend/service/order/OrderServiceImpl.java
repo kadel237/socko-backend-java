@@ -3,6 +3,7 @@ package com.soko_backend.service.order;
 import com.soko_backend.dto.order.CreateOrderRequest;
 import com.soko_backend.dto.order.OrderItemResponse;
 import com.soko_backend.dto.order.OrderResponse;
+import com.soko_backend.dto.order.UpdateOrderStatusRequest;
 import com.soko_backend.entity.order.Order;
 import com.soko_backend.entity.order.OrderItem;
 import com.soko_backend.entity.product.Product;
@@ -11,6 +12,7 @@ import com.soko_backend.enums.OrderStatus;
 import com.soko_backend.repository.OrderRepository;
 import com.soko_backend.repository.ProductRepository;
 import com.soko_backend.repository.UserRepository;
+import com.soko_backend.security.CurrentUserService;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +29,7 @@ public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
     private final ProductRepository productRepository;
     private final UserRepository userRepository;
+    private final CurrentUserService currentUserService;
 
     @Override
     @Transactional
@@ -87,12 +90,63 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    public List<OrderResponse> getOrdersForCurrentCustomer() {
+        UserEntity currentUser = currentUserService.getCurrentUser()
+                .orElseThrow(() -> new IllegalArgumentException("Utilisateur non connecté"));
+        return orderRepository.findByCustomer(currentUser)
+                .stream()
+                .map(this::toDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<OrderResponse> getOrdersForCurrentMerchant() {
+        UserEntity currentUser = currentUserService.getCurrentUser()
+                .orElseThrow(() -> new IllegalArgumentException("Utilisateur non connecté"));
+        List<Order> orders = orderRepository.findAll().stream()
+                .filter(order -> order.getItems().stream()
+                        .anyMatch(item -> item.getProduct().getShop().getOwner().getId().equals(currentUser.getId())))
+                .toList();
+        return orders.stream().map(this::toDto).collect(Collectors.toList());
+    }
+
+    @Override
+    public OrderResponse updateOrderStatus(Long orderId, UpdateOrderStatusRequest request) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new IllegalArgumentException("Commande introuvable"));
+
+        UserEntity currentUser = currentUserService.getCurrentUser()
+                .orElseThrow(() -> new IllegalArgumentException("Utilisateur non connecté"));
+
+        // Vérification : est-ce que le commerçant possède au moins un produit de cette commande ?
+        boolean isOwner = order.getItems().stream()
+                .anyMatch(item -> item.getProduct().getShop().getOwner().getId().equals(currentUser.getId()));
+
+        if (!isOwner) {
+            throw new SecurityException("Vous n'avez pas le droit de modifier cette commande");
+        }
+
+        order.setStatus(OrderStatus.valueOf(request.getStatus()));
+        orderRepository.save(order);
+
+        return toDto(order);
+    }
+    @Override
     public OrderResponse getOrderById(Long orderId) {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new IllegalArgumentException("Commande introuvable"));
+
+        UserEntity currentUser = currentUserService.getCurrentUser()
+                .orElseThrow(() -> new IllegalArgumentException("Utilisateur non connecté"));
+
+        boolean isOwner = order.getCustomer().getId().equals(currentUser.getId());
+
+        if (!isOwner) {
+            throw new SecurityException("Accès refusé à cette commande");
+        }
+
         return toDto(order);
     }
-
     private OrderResponse toDto(Order order) {
         return OrderResponse.builder()
                 .id(order.getId())

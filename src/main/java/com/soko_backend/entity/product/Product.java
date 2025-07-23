@@ -1,5 +1,6 @@
 package com.soko_backend.entity.product;
 
+import com.soko_backend.entity.shop.ShopEntity;
 import com.soko_backend.entity.user.UserEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -31,4 +32,8 @@ public class Product {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "merchant_id")
     private UserEntity merchant;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "shop_id")
+    private ShopEntity shop;
 }
