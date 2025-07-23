@@ -1,7 +1,7 @@
 package com.soko_backend.service;
 
 import com.soko_backend.dto.auth.RegisterRequest;
-import com.soko_backend.entity.UserEntity;
+import com.soko_backend.entity.user.UserEntity;
 import com.soko_backend.enums.Role;
 import com.soko_backend.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;

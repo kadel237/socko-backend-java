@@ -3,8 +3,8 @@ package com.soko_backend.service;
 import com.soko_backend.dto.shop.ShopRequestDto;
 import com.soko_backend.dto.shop.ShopResponseDto;
 import com.soko_backend.dto.shop.ShopUpdateDto;
-import com.soko_backend.entity.ShopEntity;
-import com.soko_backend.entity.UserEntity;
+import com.soko_backend.entity.shop.ShopEntity;
+import com.soko_backend.entity.user.UserEntity;
 import com.soko_backend.exception.ResourceNotFoundException;
 import com.soko_backend.repository.ShopRepository;
 import com.soko_backend.security.CurrentUserService;
@@ -55,6 +55,7 @@ public class ShopService {
 
         ShopEntity shop = shopRepository.findByIdAndOwner(shopId, currentUser)
                 .orElseThrow(() -> new ResourceNotFoundException("Boutique introuvable ou non autorisée"));
+
 
         if (updateDto.getDescription() != null) shop.setDescription(updateDto.getDescription());
         if (updateDto.getLogoUrl() != null) shop.setLogoUrl(updateDto.getLogoUrl());

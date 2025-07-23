@@ -1,4 +1,4 @@
-package com.soko_backend.service;
+package com.soko_backend.service.mail;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
