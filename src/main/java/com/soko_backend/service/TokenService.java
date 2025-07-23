@@ -1,8 +1,8 @@
 package com.soko_backend.service;
 
-import com.soko_backend.entity.PasswordResetToken;
-import com.soko_backend.entity.UserEntity;
-import com.soko_backend.entity.VerificationToken;
+import com.soko_backend.entity.token.PasswordResetToken;
+import com.soko_backend.entity.user.UserEntity;
+import com.soko_backend.entity.token.VerificationToken;
 import com.soko_backend.exception.TokenNotFoundException;
 import com.soko_backend.repository.PasswordResetTokenRepository;
 import com.soko_backend.repository.VerificationTokenRepository;

@@ -1,5 +1,6 @@
-package com.soko_backend.entity;
+package com.soko_backend.entity.shop;
 
+import com.soko_backend.entity.user.UserEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;

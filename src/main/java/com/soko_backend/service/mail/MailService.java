@@ -1,4 +1,4 @@
-package com.soko_backend.service;
+package com.soko_backend.service.mail;
 
 public interface MailService {
     void sendVerificationEmail(String to, String verificationLink);

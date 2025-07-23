@@ -1,7 +1,7 @@
 package com.soko_backend.repository;
 
-import com.soko_backend.entity.ShopEntity;
-import com.soko_backend.entity.UserEntity;
+import com.soko_backend.entity.shop.ShopEntity;
+import com.soko_backend.entity.user.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

@@ -1,6 +1,6 @@
 package com.soko_backend.repository;
 
-import com.soko_backend.entity.PasswordResetToken;
+import com.soko_backend.entity.token.PasswordResetToken;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

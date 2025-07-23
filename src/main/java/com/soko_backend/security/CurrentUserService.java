@@ -1,6 +1,6 @@
 package com.soko_backend.security;
 
-import com.soko_backend.entity.UserEntity;
+import com.soko_backend.entity.user.UserEntity;
 import com.soko_backend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
