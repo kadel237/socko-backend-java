@@ -117,6 +117,7 @@ public class SecurityConfiguration {
                 )
                 .authorizeHttpRequests(authorizations ->
                         authorizations
+                                .requestMatchers("/api/payments/webhook").permitAll()
                                 .requestMatchers("/swagger-ui/**").permitAll()
                                 .requestMatchers("/v3/api-docs/**").permitAll()
                                 .requestMatchers("/api/auth/**").permitAll()
